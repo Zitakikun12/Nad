@@ -4,7 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Untuk Ayu Putri Nadira</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap');
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-image: url('w2.jpg'); /* Menggunakan w2.jpg sebagai background */
+    background-size: cover;
+    background-position: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.85); /* Sedikit transparan agar background terlihat */
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    margin: auto;
+    position: relative;
+    overflow: hidden;
+}
+
+h1 {
+    font-size: 28px;
+    font-family: 'Dancing Script', cursive;
+    color: #d6336c;
+}
+
+p {
+    font-size: 20px;
+    font-family: 'Dancing Script', cursive;
+    color: #333;
+    transition: opacity 0.5s;
+    padding: 15px;
+}
+
+button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    background: #ff69b4;
+    color: white;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-family: 'Dancing Script', cursive;
+}
+
+button:hover {
+    background: #d6336c;
+}
+
+/* Hiasan bunga */
+.flower, .flower-bottom {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.flower {
+    top: -30px;
+    left: -20px;
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Rose_pink_flower.jpg/640px-Rose_pink_flower.jpg');
+}
+
+.flower-bottom {
+    bottom: -30px;
+    right: -20px;
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Rose_flower_rose_blossom.jpg/640px-Rose_flower_rose_blossom.jpg');
+}
+    </style>
 </head>
 <body>
     <div class="container">
@@ -15,6 +89,25 @@
         <div class="flower-bottom"></div> <!-- Bunga di bawah -->
     </div>
 
-    <script src="script.js"></script>
+    <script>const kataKata = [
+    "Aku ingin kita tetap bersama, melewati setiap waktu dengan cinta yang tetap hangat.",
+    "Kamu adalah bagian terindah dalam hidupku, dan aku ingin selalu menjagamu.",
+    "Bersamamu, aku merasa tenang. Kita tak perlu banyak kata, cukup saling memahami.",
+    "Aku ingin tetap ada di sisimu, bukan hanya untuk hari ini, tapi selamanya.",
+    "Cinta kita tidak harus sempurna, yang penting kita selalu memilih satu sama lain."
+];
+
+let index = 0;
+
+function gantiKata() {
+    index = (index + 1) % kataKata.length;
+    const p = document.getElementById("kataManis");
+    p.style.opacity = 0; // Animasi fade out
+    setTimeout(() => {
+        p.textContent = kataKata[index];
+        p.style.opacity = 1; // Animasi fade in
+    }, 500);
+}
+</script>
 </body>
 </html>
