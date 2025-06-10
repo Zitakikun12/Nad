@@ -225,7 +225,7 @@ const gameData = [
     {
       title: "Ending Buruk",
       image: "bad.jpg",
-      text: (name) => `Sayang ${name}, pilihanmu membuat semua orang menjauh.`,
+      text: (name) => `Sayang sekali ${name}, pilihanmu membuat semua orang menjauh.`,
       minScore: -999,
       maxScore: -3,
       audio: "bad.mp3"
