@@ -1,0 +1,716 @@
+ const commonChapters = [
+      {
+        bg: '1.jpg',
+        title: 'Pertemuan Tak Terduga',
+        character: { name: '???' },
+        text: (name) => `Hari itu adalah hari biasa di musim semi. Aku duduk sendirian di bawah pohon sakura favoritku, menikmati buku baru yang baru saja kubeli. Kelopak bunga sakura berjatuhan lembut di sekitarku seperti salju musim semi.\n\nTiba-tiba, cahaya matahari yang menerangi bukuku terhalang. Aku mengangkat kepalaku dan melihat seorang gadis berdiri di hadapanku. Rambut hitam panjangnya yang halus bergerak lembut ditiup angin, dan matanya yang berwarna coklat muda seperti madu menatapku dengan rasa ingin tahu yang tak tersembunyikan.`,
+        choices: [
+          { 
+            text: 'Tersenyum dan menyapa', 
+            effect: +2, 
+            response: 'Gadis itu tersipu malu ketika kau tersenyum padanya. "Ma-Maaf mengganggu," bisiknya dengan suara lembut seperti gemerisik daun.' 
+          },
+          { 
+            text: 'Mengabaikan dan terus membaca', 
+            effect: -1, 
+            response: 'Dia tetap berdiri di sana selama beberapa saat sebelum akhirnya berjalan pergi dengan langkah lambat, bahunya sedikit terkulai.' 
+          },
+          { 
+            text: 'Bereskan buku dan bersiap pergi', 
+            effect: -3, 
+            response: 'Ketika kau berdiri, kau melihat ekspresi sedih sekilas di wajahnya sebelum dia cepat-cepat menunduk. "Aku... aku pergi dulu," bisiknya hampir tak terdengar.' 
+          },
+          {
+            text: 'Tanya apa yang dia inginkan',
+            effect: 0,
+            response: 'Dia tampak gugup, memainkan ujung rok seragamnya. "Aku... hanya penasaran dengan buku yang kau baca," jawabnya dengan suara kecil.'
+          }
+        ]
+      },
+      {
+        bg: '2.jpg',
+        title: 'Percakapan Pertama',
+        character: { name: 'Gadis Misterius' },
+        text: (name) => `Keesokan harinya, gadis itu muncul lagi di tempat yang sama. Kali ini dia duduk di bangku seberangmu dengan buku di tangannya, tapi matanya lebih sering menatapmu daripada halaman buku.\n\n"Maaf mengganggumu kemarin," ucapnya tiba-tiba, suaranya bergetar sedikit. "Aku sering melihatmu ke sini sendirian. Aku... aku juga suka tempat ini." Dia memegang erat bukunya, seolah membutuhkan sesuatu untuk dipegang.`,
+        choices: [
+          { 
+            text: '"Tidak apa, aku senang ada yang diajak bicara"', 
+            effect: +3, 
+            response: 'Bibirnya yang merah muda merekah menjadi senyuman kecil yang manis. "Aku... aku Takamiya," katanya malu-malu.' 
+          },
+          { 
+            text: '"Kamu mengikutiku?" dengan nada tegas', 
+            effect: -2, 
+            response: 'Wajahnya pucat seketika. "Tidak! Aku hanya... suka ke taman ini juga," jawabnya cepat sambil menunduk.' 
+          },
+          { 
+            text: 'Angguk saja dan kembali ke buku', 
+            effect: -1, 
+            response: 'Dia menghela napas kecil dan mulai membuka bukunya, tapi sesekali matanya masih mencuri pandang ke arahmu.' 
+          },
+          {
+            text: '"Aku suka ketenangan di sini" sambil tersenyum',
+            effect: +2,
+            response: '"Aku juga," jawabnya dengan suara lebih percaya diri. "Di sini... rasanya damai."'
+          }
+        ]
+      },
+      {
+        bg: '3.jpg',
+        title: 'Identitas Terungkap',
+        character: { name: 'Takamiya' },
+        text: (name) => `Hari berikutnya, Takamiya datang dengan membawa dua kotak jus. Dia memberimu satu dengan tangan gemetar.\n\n"Aku Takamiya Mio, kelas 2-B," katanya sambil menatap kelopak sakura yang beterbangan. "Kamu...?"\n\nSinar matahari pagi menerpa rambut hitamnya yang halus, membuatnya seperti bersinar. Dia memakai pita kecil berwarna biru muda yang cocok dengan matanya.`,
+        choices: [
+          { 
+            text: `"Aku ${name}, kelas 2-C" sambil menerima jus`, 
+            effect: +4, 
+            response: '"Takamiya saja sudah cukup," katanya sambil tersipu, memainkan ujung pita rambutnya.' 
+          },
+          { 
+            text: '"Kamu cantik hari ini" dengan jujur', 
+            effect: +3, 
+            response: 'Wajahnya langsung memerah sampai ke telinga. "J-jangan bicara sembarangan!" tapi senyum kecilnya tak bisa disembunyikan.' 
+          },
+          { 
+            text: '"Kenapa tertarik padaku?" dengan nada datar', 
+            effect: -1, 
+            response: '"Aku hanya... penasaran," jawabnya menunduk, suaranya hampir tak terdengar.' 
+          },
+          { 
+            text: '"Jangan menggangguku lagi" dengan ketus', 
+            effect: -4, 
+            response: 'Dia mengangguk pelan, matanya berkaca-kaca, lalu berbalik pergi dengan langkah cepat.' 
+          },
+          {
+            text: '"Terima kasih untuk jusnya" sambil tersenyum',
+            effect: +2,
+            response: '"S-sama-sama," jawabnya sambil tersipu, senang bahwa kau menerima pemberiannya.'
+          }
+        ]
+      }
+    ];
+
+    // Expanded Bad Ending Route (70% longer)
+    const badRouteChapters = [
+      {
+        bg: '4-bad.jpg',
+        title: 'Penolakan Pertama',
+        character: { name: 'Mio' },
+        text: (name) => `Minggu berikutnya, Mio menghampirimu lagi di taman, kali ini dengan dua bento box yang dibungkus kain bermotif bunga. Tangannya gemetar sedikit saat menawarkannya padamu.\n\n"Aku... aku membuat makan siang untuk kita," katanya dengan suara kecil. "Aku berlatih semalaman..."\n\nMatanya berbinar penuh harap, tapi juga takut akan penolakan.`,
+        choices: [
+          { 
+            text: '"Maaf, aku sudah bawa bekal"', 
+            effect: -2, 
+            response: 'Wajahnya jatuh seketika. "Oh... tidak apa-apa," bisiknya sambil menarik kembali bento box itu.' 
+          },
+          { 
+            text: '"Aku tidak lapar" sambil menolak', 
+            effect: -3, 
+            response: 'Dia mengangguk cepat, bibirnya bergetar. "Aku... aku mengerti."' 
+          },
+          { 
+            text: 'Diam dan berpaling', 
+            effect: -4, 
+            response: 'Dia menunduk dalam-dalam, air mata kecil jatuh ke bento box yang dipegangnya.' 
+          },
+          {
+            text: '"Mungkin lain kali ya"',
+            effect: -1,
+            response: 'Dia mengangguk pelan. "Ya, lain kali," bisiknya tanpa keyakinan.'
+          }
+        ]
+      },
+      {
+        bg: '5-bad.jpg',
+        title: 'Kesepian di Perpustakaan',
+        character: { name: 'Mio' },
+        text: (name) => `Di perpustakaan yang sunyi, Mio duduk di seberangmu. Dia sudah tidak mencoba menyapamu lagi, tapi matanya sesekali masih mencuri pandang.\n\nHari ini, dia meletakkan sebuah origami burung kecil di mejamu sebelum cepat-cepat pergi. Kertasnya halus dan berwarna biru muda, dengan sayap yang dilipat dengan sempurna.`,
+        choices: [
+          { 
+            text: 'Abaikan origami itu', 
+            effect: -3, 
+            response: 'Dari kejauhan, kau melihat bahunya terlihat turun ketika kau tidak menyentuh origaminya.' 
+          },
+          { 
+            text: 'Buang origami itu', 
+            effect: -5, 
+            response: 'Ketika kau membuangnya ke tempat sampah, kau melihat Mio berdiri di pintu, wajahnya hancur sebelum dia berlari pergi.' 
+          },
+          { 
+            text: 'Simpan origami itu tanpa komentar', 
+            effect: -1, 
+            response: 'Dia mengamati dari jauh, tampak sedikit lega melihatmu tidak membuang pemberiannya.' 
+          },
+          {
+            text: 'Angkat origami itu dan lihat sekilas',
+            effect: +1,
+            response: 'Dari balik rak buku, kau melihat senyum kecil muncul di wajahnya sebelum dia menghilang.'
+          }
+        ]
+      },
+      {
+        bg: '6-bad.jpg',
+        title: 'Hujan dan Air Mata',
+        character: { name: 'Mio' },
+        text: (name) => `Hujan deras tiba-tiba turun saat kalian pulang sekolah. Mio berdiri di bawah atap sekolah, memegang payung kecil bermotif bunga.\n\nDia melihatmu, lalu menunduk cepat. "Kamu... mau pinjam payungku?" tanyanya dengan suara kecil, hampir tertelan deru hujan.`,
+        choices: [
+          { 
+            text: 'Tolak dan lari kehujanan', 
+            effect: -4, 
+            response: 'Air matanya bercampur dengan air hujan ketika kau berlari pergi tanpa melihat ke belakang.' 
+          },
+          { 
+            text: 'Ambil payung tanpa bicara', 
+            effect: -2, 
+            response: 'Dia berdiri diam di bawah hujan, membiarkan dirinya basah kuyup sambil melihatmu pergi.' 
+          },
+          { 
+            text: '"Tidak usah, tunggu saja di sini"', 
+            effect: 0, 
+            response: 'Dia mengangguk pelan, tetap berdiri di tempat sementara kau pergi mencari payung lain.' 
+          },
+          {
+            text: '"Kita bisa berbagi payung"',
+            effect: +2,
+            response: 'Dia terkejut, lalu tersipu. "A-aku... baiklah," bisiknya sambil mendekat pelan.'
+          }
+        ]
+      },
+      {
+        bg: '7-bad.jpg',
+        title: 'Pertemuan Terakhir',
+        character: { name: 'Mio' },
+        text: (name) => `Musim semi hampir berakhir ketika Mio menghampirimu untuk terakhir kalinya. Wajahnya lebih kurus, matanya tidak lagi berbinar seperti dulu.\n\n"Aku... akan pindah sekolah," katanya sambil memegang erat buku di tangannya. "Aku hanya ingin mengucapkan selamat tinggal."\n\nDia mengulurkan sebuah buku catatan kecil berisi sketsa-sketsa indah, termasuk beberapa gambarmu.`,
+        choices: [
+          { 
+            text: 'Tolak pemberiannya', 
+            effect: -5, 
+            response: 'Dia menarik kembali tangannya seperti tersengat, lalu berlari pergi sambil menahan isak.' 
+          },
+          { 
+            text: 'Terima tapi tidak membukanya', 
+            effect: -2, 
+            response: 'Dia mengangguk kecil, senyum getir di bibirnya. "Semoga beruntung," bisiknya sebelum pergi.' 
+          },
+          { 
+            text: 'Lihat sekilas lalu kembalikan', 
+            effect: -1, 
+            response: '"Terima kasih sudah mau melihat," ucapnya dengan suara bergetar sebelum berbalik.' 
+          },
+          {
+            text: 'Terima dan ucapkan terima kasih',
+            effect: +1,
+            response: 'Matanya berbinar sebentar. "Jaga dirimu," bisiknya sebelum pergi dengan langkah lebih ringan.'
+          }
+        ]
+      },
+      {
+        bg: '8-bad.jpg',
+        title: 'Kenangan yang Tertinggal',
+        character: { name: 'Takamiya Mio' },
+        text: (name) => `Beberapa tahun kemudian, kamu secara tak sengaja melihat Mio di stasiun kereta. Dia tidak menyadari kehadiranmu.\n\nDia terlihat lebih dewasa, memakai kacamata, dan rambutnya dipotong pendek. Di tangannya masih ada buku sketsa yang sama.\n\nDia duduk sendirian di bangku, sesekali menatap ke arah pohon sakura di seberang rel.`,
+        choices: [
+          { 
+            text: 'Pergi tanpa menyapa', 
+            effect: 0, 
+            response: 'Kamu memutuskan untuk membiarkan masa lalu tetap menjadi kenangan. Kereta datang, dan Mio menghilang di balik pintu gerbong.' 
+          },
+          { 
+            text: 'Perhatikan dari jauh', 
+            effect: +1, 
+            response: 'Dari kejauhan, kau melihat dia membuka buku sketsanya dan tersenyum kecil pada sebuah gambar sebelum keretanya tiba.' 
+          },
+          { 
+            text: 'Coba menyapanya', 
+            effect: +2, 
+            response: 'Tapi saat kau mendekat, keretamu sudah datang. Mungkin lain kali... jika nasib mengizinkan.' 
+          }
+        ]
+      }
+    ];
+
+    // Expanded Neutral Ending Route (80% longer)
+    const neutralRouteChapters = [
+      {
+        bg: '4-neutral.jpg',
+        title: 'Makan Siang Bersama',
+        character: { name: 'Mio' },
+        text: (name) => `"Aku membawa bekal ekstra hari ini," ujar Mio dengan malu-malu, menunjukkan kotak makan siang berhias pita. "Kalau kamu mau... kita bisa makan bersama?"\n\nMatanya berbinar penuh harap, tapi juga siap menerima penolakan. Kotak makannya dihias dengan hati-hati, dengan makanan yang tersusun rapi.`,
+        choices: [
+          { 
+            text: '"Tentu, terlihat enak!"', 
+            effect: +3, 
+            response: 'Wajahnya berseri. "Aku bangun jam 5 pagi untuk membuatnya," akunya bangga sambil membuka kotak makanannya.' 
+          },
+          { 
+            text: '"Aku tidak terlalu lapar, tapi sedikit saja"', 
+            effect: +1, 
+            response: 'Dia tersenyum kecil dan menyodorkan porsi kecil. "Cobalah tamagoyaki-ku," bisiknya.' 
+          },
+          { 
+            text: '"Mungkin lain kali ya"', 
+            effect: -1, 
+            response: '"Oh... baiklah," jawabnya sambil menutup kotak makanannya dengan pelan.' 
+          },
+          {
+            text: '"Kamu masak sendiri?" penasaran',
+            effect: +2,
+            response: '"Iya! Aku suka memasak," jawabnya dengan antusias yang tidak biasa, lalu tersipu malu.'
+          }
+        ]
+      },
+      {
+        bg: '5-neutral.jpg',
+        title: 'Bakat Tersembunyi',
+        character: { name: 'Mio' },
+        text: (name) => `Di kelas seni, guru memuji gambar Mio di depan seluruh kelas. Wajahnya merah padam saat semua orang bertepuk tangan.\n\nSetelah kelas, dia menghampirimu dengan buku sketsa di tangan. "Aku... aku suka menggambar pemandangan," katanya sambil membuka buku itu perlahan.\n\nDi antara banyak gambar pemandangan, ada beberapa sketsa halus dirimu sedang membaca di taman.`,
+        choices: [
+          { 
+            text: '"Kamu sangat berbakat!"', 
+            effect: +3, 
+            response: 'Dia tersipu senang. "Tidak juga... tapi terima kasih," bisiknya sambil menutup buku dengan cepat.' 
+          },
+          { 
+            text: '"Kenapa kamu menggambarku?"', 
+            effect: 0, 
+            response: '"Aku... suka ekspresimu saat membaca," jawabnya sambil menunduk, wajahnya merah.' 
+          },
+          { 
+            text: 'Diam saja sambil mengangguk', 
+            effect: -1, 
+            response: 'Dia menutup buku sketsanya dengan pelan. "Maaf mengganggu," bisiknya sebelum pergi.' 
+          },
+          {
+            text: '"Boleh aku lihat yang lainnya?"',
+            effect: +2,
+            response: 'Matanya berbinar. "B-benarkah? Kamu mau melihat?" tanyanya tak percaya.'
+          }
+        ]
+      },
+      {
+        bg: '6-neutral.jpg',
+        title: 'Festival Sekolah',
+        character: { name: 'Mio' },
+        text: (name) => `Festival sekolah tiba, dan Mio berdiri di depan kelasnya yang mengadakan kedai teh. Dia memakai yukata biru muda bermotif bunga putih, dengan rambutnya yang biasanya terurai kini disanggul rapi.\n\n"Kamu... mau keliling festival bersamaku?" tanyanya dengan suara kecil. "Aku tidak punya teman untuk diajak..." Tangannya memegang erat obi yukatanya.`,
+        choices: [
+          { 
+            text: '"Ayo, kamu terlihat cantik hari ini"', 
+            effect: +4, 
+            response: 'Wajahnya langsung memerah. "J-jangan bicara begitu," bisiknya, tapi senyumnya lebar.' 
+          },
+          { 
+            text: '"Aku janji dengan teman, tapi kita bisa bertemu nanti"', 
+            effect: +1, 
+            response: '"Oh... baiklah," jawabnya sambil mencoba tersenyum, meski matanya sedikit kecewa.' 
+          },
+          { 
+            text: '"Aku sibuk dengan stand kelas"', 
+            effect: -1, 
+            response: '"Aku mengerti," bisiknya sambil menunduk, memainkan ujung yukatanya.' 
+          },
+          {
+            text: '"Kita bisa lihat stand makanan dulu"',
+            effect: +2,
+            response: '"Aku tahu yang enak-enak!" ujarnya bersemangat, lalu tersipu malu karena bersuara terlalu keras.'
+          }
+        ]
+      },
+      {
+        bg: '7-neutral.jpg',
+        title: 'Hujan dan Payung',
+        character: { name: 'Mio' },
+        text: (name) => `Hujan deras tiba-tiba turun saat kalian pulang dari festival. Mio mengeluarkan payung kecil bermotif bunga sakura.\n\n"Kita... bisa berbagi payung," katanya sambil mendekat pelan. Hujan telah membuat rambutnya yang biasanya rapi menjadi sedikit basah dan berantakan.`,
+        choices: [
+          { 
+            text: 'Pegang payung untuknya', 
+            effect: +3, 
+            response: 'Dia tersipu ketika kau mengambil payung dan memayunginya. "T-terima kasih," bisiknya.' 
+          },
+          { 
+            text: 'Berbagi payung dengan menjaga jarak', 
+            effect: +1, 
+            response: 'Kalian berjalan dalam diam, sesekali bahu kalian bersentuhan tanpa sengaja.' 
+          },
+          { 
+            text: '"Aku akan lari saja"', 
+            effect: -2, 
+            response: 'Dia mengangguk pelan. "Hati-hati," bisiknya sambil melihatmu lari kehujanan.' 
+          },
+          {
+            text: 'Tawarkan jaket karena dia kedinginan',
+            effect: +2,
+            response: '"Tidak usah... tapi terima kasih," jawabnya sambil tetap memakai jaketmu.'
+          }
+        ]
+      },
+      {
+        bg: '8-neutral.jpg',
+        title: 'Kelas Memasak',
+        character: { name: 'Mio' },
+        text: (name) => `"Ada kelas memasak ekstrakurikuler," bisik Mio suatu hari. "Aku... tidak punya partner. Mau ikut bersamaku?"\n\nDia memegang formulir pendaftaran yang sudah diisi setengah. Tangannya gemetar sedikit menunggu jawabanmu.`,
+        choices: [
+          { 
+            text: '"Tentu! Aku ingin belajar masak darimu"', 
+            effect: +4, 
+            response: 'Dia langsung mengisi namamu di formulir dengan senyum lebar. "Kita akan buat kue!"' 
+          },
+          { 
+            text: '"Aku tidak bisa masak, tapi aku mau coba"', 
+            effect: +2, 
+            response: '"Aku akan ajarkan!" janjinya dengan mata berbinar.' 
+          },
+          { 
+            text: '"Aku sibuk dengan klub lain"', 
+            effect: -1, 
+            response: '"Oh... tidak apa," jawabnya sambil melipat formulir itu.' 
+          },
+          {
+            text: '"Kita bisa coba buat kue coklat"',
+            effect: +3,
+            response: '"Kamu suka coklat? Aku juga!" ujarnya bersemangat sebelum tersipu malu.'
+          }
+        ]
+      },
+      {
+        bg: '9-neutral.jpg',
+        title: 'Permen Lavender',
+        character: { name: 'Mio' },
+        text: (name) => `Mio memberimu sekotak kecil permen lavender buatan tangan. "Ini... bisa menenangkan pikiran," katanya sambil menatap tanah.\n\nKotaknya dihias dengan indah, dengan pita kecil dan tulisan tangan yang rapi. Bau lavender yang harum keluar dari dalamnya.`,
+        choices: [
+          { 
+            text: 'Cicipi langsung dan puji rasanya', 
+            effect: +3, 
+            response: '"Kamu suka? Aku senang!" ujarnya dengan senyum lebar yang tidak biasa.' 
+          },
+          { 
+            text: 'Simpan sebagai kenang-kenangan', 
+            effect: +2, 
+            response: '"Kamu... tidak mau mencobanya?" tanyanya penuh harap.' 
+          },
+          { 
+            text: '"Aku tidak suka lavender"', 
+            effect: -1, 
+            response: '"Oh... maaf," bisiknya sambil menarik kembali tangannya.' 
+          },
+          {
+            text: '"Kamu buat sendiri? Luar biasa!"',
+            effect: +4,
+            response: 'Dia tersipu senang. "Aku belajar dari nenek," akunya bangga.'
+          }
+        ]
+      },
+      {
+        bg: '10-neutral.jpg',
+        title: 'Kelulusan',
+        character: { name: 'Mio' },
+        text: (name) => `Di hari kelulusan, Mio memberimu album foto kecil. Berisi semua momen kalian bersama - di taman, festival, kelas memasak.\n\n"Terima kasih sudah menjadi temanku," katanya dengan mata berkaca-kaca. "Aku... aku akan kuliah di sekolah masak."\n\nDia memegang erat tasnya, menunggu reaksimu.`,
+        choices: [
+          { 
+            text: 'Peluk dia erat', 
+            effect: +4, 
+            response: 'Dia kaget sejenak, lalu meleleh dalam pelukanmu. "Aku akan merindukanmu," bisiknya.' 
+          },
+          { 
+            text: '"Kamu akan menjadi koki hebat"', 
+            effect: +2, 
+            response: '"Kamu benar-benar percaya padaku?" tanyanya dengan mata berbinar.' 
+          },
+          { 
+            text: '"Semoga sukses" biasa saja', 
+            effect: 0, 
+            response: 'Dia mengangguk, senyum kecil mengembang di wajahnya. "Kamu juga."' 
+          },
+          {
+            text: '"Aku akan datang ke restoranmu nanti"',
+            effect: +3,
+            response: '"Janji?" tanyanya sambil mengulurkan kelingkingnya seperti anak kecil.'
+          }
+        ]
+      }
+    ];
+
+    // Expanded Good/God Ending Route (100% longer)
+    const goodRouteChapters = [
+      {
+        bg: '4-good.jpg',
+        title: 'Makan Siang Spesial',
+        character: { name: 'Mio' },
+        text: (name) => `"Aku... membuat bento spesial hari ini," ujar Mio dengan suara bergetar, menunjukkan kotak makan siang berhias pita merah. "Kalau kamu mau..."\n\nKetika dibuka, bento itu tersusun indah seperti karya seni - nasi berbentuk hati, tamagoyaki rapi, dan sayuran yang diatur cantik. Ada juga onigiri kecil berbentuk beruang.`,
+        choices: [
+          { 
+            text: '"Ini luar biasa! Kamu sangat berbakat"', 
+            effect: +5, 
+            response: 'Wajahnya berseri-seri. "Aku bangun jam 4 pagi untuk membuatnya," akunya bangga sambil tersipu.' 
+          },
+          { 
+            text: 'Ambil foto bento itu sebelum dimakan', 
+            effect: +4, 
+            response: '"Kamu suka? Aku senang!" ujarnya gembira sambil mengeluarkan kue kecil berbentuk hati dari tasnya.' 
+          },
+          { 
+            text: '"Aku tidak tega memakannya, terlalu indah"', 
+            effect: +3, 
+            response: '"Tidak apa, aku akan buatkan lagi!" janjinya dengan mata berbinar.' 
+          },
+          {
+            text: 'Beri dia hadiah balasan esok hari',
+            effect: +6,
+            response: 'Ketika kau memberinya kue buatanmu yang jelek esok hari, dia menangis bahagia. "Ini... yang pertama kalinya ada yang membuatkan sesuatu untukku."'
+          }
+        ]
+      },
+      {
+        bg: '5-good.jpg',
+        title: 'Buku Sketsa Rahasia',
+        character: { name: 'Mio' },
+        text: (name) => `Mio dengan malu-malu menunjukkan buku sketsa barunya. Setiap halaman penuh dengan gambarmu - sedang membaca, tertawa, bahkan tidur di perpustakaan.\n\n"Kamu... suka menggambarku?" tanyamu terkejut. Beberapa gambar sangat detail, menunjukkan dia memperhatikanmu dengan saksama.`,
+        choices: [
+          { 
+            text: '"Boleh aku simpan yang ini?" sambil menunjuk favoritmu', 
+            effect: +6, 
+            response: '"Aku akan buatkan album khusus untukmu!" janjinya dengan senyum lebar.' 
+          },
+          { 
+            text: '"Gambarku lagi lain kali ya" sambil tersenyum', 
+            effect: +5, 
+            response: '"Setiap hari!" jawabnya antusias sebelum tersadar dan tersipu malu.' 
+          },
+          { 
+            text: 'Buat sketsa dirinya sebagai balasan', 
+            effect: +7, 
+            response: 'Ketika kau menunjukkan gambarnya yang jelek, dia menangis bahagia. "Tidak ada yang pernah menggambarku sebelumnya..."' 
+          },
+          {
+            text: '"Kita bisa gambar bersama di taman"',
+            effect: +4,
+            response: '"Benarkah? Aku tidak sabar!" ujarnya sambil memegang erat buku sketsanya.'
+          }
+        ]
+      },
+      {
+        bg: '6-good.jpg',
+        title: 'Hujan Berdua',
+        character: { name: 'Mio' },
+        text: (name) => `Hujan deras tiba-tiba turun saat kalian pulang sekolah. Mio mengeluarkan payung kecil bermotif bunga sakura.\n\n"Kita... bisa berbagi," katanya sambil mendekat pelan. Hujan telah membuat beberapa helai rambutnya menempel di pipinya yang merah.`,
+        choices: [
+          { 
+            text: 'Pegang bahunya erat dan tarik mendekat', 
+            effect: +7, 
+            response: 'Dia kaku sejenak, lalu perlahan bersandar, kepalanya hampir menyentuh bahumu.' 
+          },
+          { 
+            text: 'Tawarkan jaket karena dia kedinginan', 
+            effect: +5, 
+            response: '"Tidak usah... tapi terima kasih," bisiknya sambil tersipu, tetap memakai jaketmu.' 
+          },
+          { 
+            text: 'Bisikkan "Kamu cantik di bawah hujan"', 
+            effect: +6, 
+            response: 'Dia tersipu sampai ke telinga. "D-diamlah," bisiknya sambil menepuk lenganmu pelan.' 
+          },
+          {
+            text: 'Temani dia pulang sampai depan rumah',
+            effect: +4,
+            response: '"Ini... pertama kalinya ada yang mengantarku pulang," akunya sambil tersenyum kecil.'
+          }
+        ]
+      },
+      {
+        bg: '7-good.jpg',
+        title: 'Telepon Tengah Malam',
+        character: { name: 'Mio' },
+        text: (name) => `Pukul 2 pagi, teleponmu berdering. Suara Mio yang lembut dan rapuh terdengar di seberang.\n\n"Maaf... aku tidak bisa tidur. Bisa dengar suaramu sebentar?" pintanya dengan suara mengantuk. Di belakangnya terdengar suara hujan deras.`,
+        choices: [
+          { 
+            text: 'Temani bicara sampai dia tertidur', 
+            effect: +6, 
+            response: '"Ceritakan... tentang harimu..." bisiknya pelan sebelum terdengar napasnya teratur.' 
+          },
+          { 
+            text: 'Nyanyikan lagu pengantar tidur', 
+            effect: +8, 
+            response: '"Kamu... suaramu indah," jawabnya sambil menguap, lalu tertidur dengan telepon masih tersambung.' 
+          },
+          { 
+            text: 'Tawarkan untuk video call', 
+            effect: +5, 
+            response: 'Wajahnya yang mengantuk di layar membuatmu tersenyum. "Kamu... terlalu baik," bisiknya sebelum tertidur.' 
+          },
+          {
+            text: 'Janji akan temui besok pagi',
+            effect: +4,
+            response: '"Janji?" tanyanya dengan suara kecil penuh harap sebelum mengucapkan selamat tidur.'
+          }
+        ]
+      },
+      {
+        bg: '8-good.jpg',
+        title: 'Perasaan yang Terungkap',
+        character: { name: 'Mio' },
+        text: (name) => `Mio tidak muncul selama 3 hari. Saat bertemu, matanya sembap seperti habis menangis lama.\n\n"Aku takut... perasaanku membuatku lemah," bisiknya sambil menggigit bibir. "Aku... aku..."\n\nDia tidak bisa melanjutkan, tangannya gemetar memegang erat buku catatannya.`,
+        choices: [
+          { 
+            text: 'Peluk erat tanpa kata', 
+            effect: +8, 
+            response: '"Jangan pergi..." bisiknya di bahumu sambil menangis pelan, menggenggam bajumu erat-erat.' 
+          },
+          { 
+            text: '"Aku di sini untukmu" sambil genggam tangannya', 
+            effect: +7, 
+            response: 'Dia menangis di bahumu, melepaskan semua emosi yang ditahannya selama ini.' 
+          },
+          { 
+            text: 'Bisikkan "Aku juga merasakan hal yang sama"', 
+            effect: +10, 
+            response: 'Dia menyentak kaget, lalu memelukmu erat sambil menangis bahagia. "Aku... aku sangat senang..."' 
+          },
+          {
+            text: 'Tunggu sampai dia tenang',
+            effect: +6,
+            response: 'Setelah beberapa saat, dia menarik napas dalam. "Maaf... aku sudah baik sekarang," bisiknya sambil tersenyum kecil.'
+          }
+        ]
+      },
+      {
+        bg: '9-good.jpg',
+        title: 'Festival Cinta',
+        character: { name: 'Mio' },
+        text: (name) => `Di festival sekolah, Mio memakai yukata biru bermotif bunga putih dengan rambut disanggul rapi. Dia berdiri di bawah lentera merah, wajahnya berseri saat melihatmu datang.\n\n"Kamu... datang," bisiknya bahagia. "Aku tidak punya teman untuk keliling festival..."\n\nDia mengulurkan tangannya yang kecil dengan malu-malu.`,
+        choices: [
+          { 
+            text: '"Kamu cantik sekali hari ini" tulus', 
+            effect: +7, 
+            response: 'Wajahnya langsung memerah sampai ke telinga. "J-jangan bicara begitu..." bisiknya sambil tersipu.' 
+          },
+          { 
+            text: 'Genggam tangannya erat', 
+            effect: +6, 
+            response: 'Dia tersenyum lebar dan menggenggam balik tanganmu dengan erat.' 
+          },
+          { 
+            text: 'Sematkan bunga di rambutnya', 
+            effect: +8, 
+            response: '"A-aku... terima kasih," bisiknya sambil menyentuh bunga itu dengan lembut, wajahnya merah padam.' 
+          },
+          {
+            text: '"Ayo kita nikmati festival bersama"',
+            effect: +5,
+            response: 'Dia mengangguk antusias. "Aku ingin mencoba semua permainan!" ujarnya dengan semangat yang tidak biasa.'
+          }
+        ]
+      },
+      {
+        bg: '10-good.jpg',
+        title: 'Kelas Memasak Berdua',
+        character: { name: 'Mio' },
+        text: (name) => `"Ada kelas memasak khusus pasangan," bisik Mio sambil menunjukkan brosur. Wajahnya merah padam saat mengatakan kata "pasangan".\n\n"Mau... jadi partnernku?" tanyanya dengan suara kecil penuh harap. Tangannya gemetar memegang brosur itu.`,
+        choices: [
+          { 
+            text: '"Tentu! Aku ingin belajar darimu" antusias', 
+            effect: +7, 
+            response: 'Dia tersenyum lebar, sangat antusias sambil segera mengisi formulir pendaftaran.' 
+          },
+          { 
+            text: '"Aku akan buatkan sesuatu spesial untukmu" sambil tersenyum', 
+            effect: +9, 
+            response: '"Benarkah? Aku tidak sabar!" wajahnya berseri seperti anak kecil, melompat-lompat kecil.' 
+          },
+          { 
+            text: 'Peluk dia dari belakang', 
+            effect: +8, 
+            response: 'Dia kaget lalu meleleh dalam pelukanmu. "Kamu... terlalu baik padaku," bisiknya.' 
+          },
+          {
+            text: '"Kita bisa buat kue coklat berbentuk hati"',
+            effect: +6,
+            response: '"B-benarkah? Aku akan buat yang terbaik!" janjinya dengan mata berbinar.'
+          }
+        ]
+      },
+      {
+        bg: '11-good.jpg',
+        title: 'Permen Lavender Spesial',
+        character: { name: 'Mio' },
+        text: (name) => `Mio memberimu sekotak kecil permen lavender buatan tangan dengan kemasan indah. "Ini... versi spesial," bisiknya malu-malu.\n\nKetika dibuka, permen-permen itu berbentuk hati kecil. Bau lavender yang harum bercampur dengan vanilla keluar dari dalamnya.`,
+        choices: [
+          { 
+            text: 'Cicipi langsung dan peluk dia erat', 
+            effect: +8, 
+            response: '"Kamu suka? Aku senang!" ujarnya sambil meleleh dalam pelukanmu.' 
+          },
+          { 
+            text: 'Simpan satu permen di dompet sebagai jimat', 
+            effect: +7, 
+            response: '"Kamu... kamu benar-benar menyimpannya?" matanya berbinar penuh kebahagiaan.' 
+          },
+          { 
+            text: 'Beri dia ciuman di pipi sebagai balasan', 
+            effect: +10, 
+            response: 'Dia terkejut, lalu tersipu sampai ke telinga. "A-aku... terima kasih," bisiknya sambil memegang pipinya.' 
+          },
+          {
+            text: '"Aku akan simpan selamanya" tulus',
+            effect: +9,
+            response: 'Dia menangis bahagia. "Tidak ada yang pernah... menghargai pemberianku seperti ini," bisiknya.'
+          }
+        ]
+      },
+      {
+        bg: '12-good.jpg',
+        title: 'Pengakuan di Bawah Sakura',
+        character: { name: 'Mio' },
+        text: (name) => `Di bawah pohon sakura tempat pertama kali bertemu, Mio berdiri gemetar memegang sesuatu di belakang punggungnya. Kelopak sakura berjatuhan di sekitarnya seperti hujan musim semi.\n\n"Aku... aku punya sesuatu untuk dikatakan," bisiknya sambil menatapmu dengan mata berkaca-kaca. "Selama ini..."\n\nDia mengeluarkan surat berhiaskan bunga sakura kering dengan tulisan tangan rapi.`,
+        choices: [
+          { 
+            text: 'Genggam tangannya erat untuk memberinya keberanian', 
+            effect: +9, 
+            response: 'Dia menarik napas dalam dan mulai membaca surat itu dengan suara bergetar penuh perasaan.' 
+          },
+          { 
+            text: '"Aku juga punya sesuatu untuk dikatakan" sambil keluarkan hadiahmu', 
+            effect: +12, 
+            response: 'Matanya membesar ketika kau mengeluarkan kalung dengan liontin bunga sakura kecil. "A-aku..." dia tidak bisa melanjutkan karena terisak.' 
+          },
+          { 
+            text: 'Peluk dia erat sebelum dia bicara', 
+            effect: +10, 
+            response: '"Aku mengerti," bisikmu. Dia menangis bahagia di bahumu, menggenggam erat bajumu.' 
+          },
+          {
+            text: 'Bisikkan "Aku mencintaimu" terlebih dahulu',
+            effect: +15,
+            response: 'Dia terkejut, lalu menangis tersedu-sedu sambil memelukmu erat. "Aku... aku juga mencintaimu," bisiknya di antara isakan.'
+          }
+        ]
+      }
+    ];
+    const endings = [
+      {
+        title: "Jalan yang Berbeda",
+        bg: "bad-ending.jpg",
+        text: (name) => `Tahun-tahun berlalu setelah Mio pindah sekolah. Kamu sesekali mendengar kabarnya dari teman-teman - dia kuliah di sekolah seni jauh di kota lain, lalu bekerja sebagai ilustrator buku anak-anak.\n\nSuatu hari di musim semi, kamu secara tak sengaja melihat buku anak-anak bergambar indah di toko. Gaya gambarnya sangat familiar. Saat kamu membuka halaman belakang, ada foto kecil Mio dengan senyum yang tidak secerah dulu.\n\nKamu membeli buku itu dan menyimpannya di rak paling atas, bersama kenangan akan gadis pemalu di bawah pohon sakura yang pernah mencoba menyapamu. Terkadang kamu bertanya-tanya, bagaimana jadinya jika dulu kamu lebih baik padanya?\n\nNamun waktu tidak bisa diputar kembali. Yang tersisa hanyalah rasa penyesalan yang samar dan gambar-gambar indah dalam buku yang tidak pernah benar-benar kamu baca.`,
+        minScore: -999,
+        maxScore: -3
+      },
+      {
+        title: "Sahabat Sejati",
+        bg: "neutral-ending.jpg",
+        text: (name) => `Setelah lulus sekolah, kamu dan Mio tetap berteman dekat. Dia masuk sekolah masak ternama dan menjadi pastry chef berbakat, sementara kamu mengejar karirmu di bidang lain.\n\nSetiap akhir pekan, kalian bertemu di kafe kecil favoritnya. Mio selalu menyimpan meja khusus di sudut dengan pemandangan taman, dan menghidangkan kue spesial yang baru saja dia ciptakan - selalu dengan sentuhan lavender, bahan favoritnya.\n\n"Untuk teman spesial," katanya selalu sambil tersenyum manis ketika menghidangkannya untukmu.\n\nDi ulang tahunnya yang ke-25, Mio membuka kafe pertamanya. Kamu adalah orang pertama yang dia beri tahu. "Tanpa dukunganmu, aku tidak akan sampai di sini," ujarnya dengan mata berkaca-kaca saat pembukaan.\n\nKalian mungkin tidak pernah menjadi lebih dari sahabat, tetapi ikatan yang kalian miliki lebih berharga dari apapun. Setiap musim semi, kalian selalu kembali ke pohon sakura tempat pertama kali bertemu, mengenang masa-masa sekolah yang telah membentuk persahabatan kalian.`,
+        minScore: -2,
+        maxScore: 15
+      },
+      {
+        title: "Cinta di Musim Sakura",
+        bg: "good-ending.jpg",
+        text: (name) => `Di bawah pohon sakura tempat pertama kali bertemu, Mio mengungkapkan perasaannya dengan surat indah berhiaskan bunga sakura kering. Matanya berkaca-kaca ketika kamu membalas perasaannya dengan pelukan erat.\n\nHubungan kalian berkembang indah. Mio mengajarimu memasak, dan kamu membantunya keluar dari cangkangnya yang pemalu. Setiap hari Jumat adalah "date night" dimana Mio akan menyiapkan makan malam spesial dan kamu akan membawakannya bunga favoritnya - lavender segar.\n\nDi musim semi berikutnya, di tempat yang sama, kamu mengajaknya untuk tinggal bersamamu. Mio menangis bahagia sambil mengangguk cepat, tidak percaya akan kebahagiaannya.\n\nLima tahun kemudian, di musim sakura yang sama, kamu berlutut di bawah pohon itu dan mengulurkan cincin pertunangan. Air matanya yang jatuh ke cincin itu lebih berkilau dari berlian manapun. "Ya, ya, ya!" jawabnya berulang kali sambil memelukmu erat.\n\nPerkawinan kalian dihadiri oleh sedikit teman dekat, dengan Mio membuat sendiri kue pernikahan berbentuk pohon sakura. Saat menikmati kue itu di balkon, Mio berbisik, "Terima kasih sudah menyapaku dulu di bawah pohon sakura." Padahal kamulah yang seharusnya berterima kasih - karena gadis pemalu itu telah mengisi hidupmu dengan cinta dan kebahagiaan.`,
+        minScore: 16,
+        maxScore: 24
+      },
+      {
+        title: "Takdir Rasa dan Cinta",
+        bg: "special-ending.jpg",
+        text: (name) => `Setelah lulus, kamu dan Mio membuka kafe kecil bernama "Sakura Memories". Kue lavender buatannya menjadi legenda di kota, dengan antrian panjang setiap akhir pekan. Mio yang dulu pemalu sekarang tersenyum percaya diri di balik meja kasir, sesekali melirik ke dapur tempat kamu bekerja.\n\nDi tahun ketiga, Mio membuat kue spesial berbentuk pohon sakura dengan dua figur kecil di bawahnya - persis seperti tempat kalian pertama bertemu. "Untukmu," bisiknya malam itu sambil menunjuk tulisan kecil di dasar kue: "Terima kasih sudah menyapaku."\n\nDi musim semi kelima, di bawah pohon sakura yang sama, kamu mengulurkan kotak cincin. Tangannya yang biasanya lincah di dapur kini gemetar tak terkendali saat mengangguk setuju.\n\nPernikahan kalian sederhana tapi penuh makna. Mio membuat sendiri semua kue untuk resepsi, termasuk kue utama berbentuk buku (untuk pertemuan pertama kalian) dan pohon sakura (untuk cinta kalian).\n\nTahun-tahun berikutnya penuh kebahagiaan - dari kelahiran anak pertama yang kalian beri nama Sakura, hingga pembukaan cabang ketiga "Sakura Memories". Setiap malam sebelum tidur, Mio masih menyisipkan permen lavender buatannya ke dalam saku jasmu, sama seperti dulu di masa sekolah.\n\nDan setiap musim semi, tanpa pernah terlewat, kalian kembali ke pohon sakura tua itu - sekarang dengan anak-anak kecil berlarian di sekitarnya - mengenang pertemuan sederhana yang telah mengubah hidup kalian selamanya.`,
+        minScore: 25,
+        maxScore: 999
+      }
+    ];

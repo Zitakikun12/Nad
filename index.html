@@ -1,43 +1,991 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Blue Archive Dating Sim</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="1.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>My Kisah</title>
+  <style>
+    :root {
+      --primary: #e6a8d7;
+      --secondary: #a28fce;
+      --text-light: #ffffff;
+      --text-dark: #333333;
+      --bg-dark: rgba(0, 0, 0, 0.85);
+      --choice-bg: rgba(100, 70, 150, 0.9);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: var(--text-light);
+      touch-action: manipulation;
+    }
+
+    #game-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    #text-area {
+      background: var(--bg-dark);
+      padding: 15px;
+      border-top: 2px solid var(--primary);
+    }
+
+    #chapter-title {
+      color: var(--secondary);
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+
+    #character-name {
+      color: var(--primary);
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    #dialogue-text {
+      line-height: 1.5;
+      margin-bottom: 15px;
+      font-size: 1rem;
+    }
+
+    #choices-area {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+      max-height: 30vh;
+      overflow-y: auto;
+    }
+
+    .choice-btn {
+      display: block;
+      width: 100%;
+      background: var(--choice-bg);
+      color: white;
+      border: none;
+      border-left: 4px solid var(--primary);
+      padding: 12px 15px;
+      margin-bottom: 8px;
+      border-radius: 6px;
+      text-align: left;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .choice-btn:active {
+      transform: scale(0.98);
+      background: rgba(120, 90, 170, 0.9);
+    }
+
+    .choice-btn::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 5px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.5);
+      opacity: 0;
+      border-radius: 100%;
+      transform: scale(1, 1) translate(-50%, -50%);
+      transform-origin: 50% 50%;
+    }
+
+    .choice-btn:focus:not(:active)::after {
+      animation: ripple 0.6s ease-out;
+    }
+
+    @keyframes ripple {
+      0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+      }
+      100% {
+        transform: scale(20, 20);
+        opacity: 0;
+      }
+    }
+
+    .btn-disabled {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    #notification {
+      position: fixed;
+      bottom: 20px;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      color: rgba(255, 255, 255, 0.9);
+      padding: 12px 15px;
+      text-align: center;
+      z-index: 100;
+      display: none;
+      animation: fadeIn 0.3s;
+      backdrop-filter: blur(3px);
+      border-top: 1px solid var(--primary);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    #start-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+
+    #start-content {
+      background: var(--bg-dark);
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    #game-title {
+      color: var(--primary);
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+    }
+
+    #name-input {
+      width: 100%;
+      padding: 12px;
+      margin: 15px 0;
+      border: 2px solid var(--primary);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-light);
+      font-size: 1rem;
+    }
+
+    #start-btn {
+      background: linear-gradient(145deg, #a28fce, #e6a8d7);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    #start-btn:active {
+      transform: scale(0.95);
+    }
+
+    #ending-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 100;
+    }
+
+    #ending-content {
+      background: var(--bg-dark);
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    #ending-title {
+      color: var(--secondary);
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+    }
+
+    #ending-text {
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    #restart-btn {
+      background: linear-gradient(145deg, #a28fce, #e6a8d7);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    #restart-btn:active {
+      transform: scale(0.95);
+    }
+
+    #choices-area::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    #choices-area::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 5px;
+    }
+
+    #music-toggle {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.5);
+      border: none;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      z-index: 101;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
 </head>
 <body>
-  <!-- Watermark with your name -->
-  <div class="watermark">Created by Rezky</div>
+  <div id="notification"></div>
+  <button id="music-toggle">🔇</button>
 
-  <div id="game">
-    <div id="inputName">
-      <h1>Blue Archive Dating Sim</h1>
-      <input type="text" id="playerName" placeholder="Masukkan namamu">
-      <button onclick="startGame()">Mulai</button>
+  <div id="game-container">
+    <div id="text-area">
+      <div id="chapter-title"></div>
+      <div id="character-name"></div>
+      <div id="dialogue-text"></div>
     </div>
+    
+    <div id="choices-area"></div>
+  </div>
 
-    <div id="story" class="hidden">
-      <h2 id="chapterTitle"></h2>
-      <img id="characterImage" class="character-image hidden">
-      <p id="storyText"></p>
-      <div id="choices"></div>
-    </div>
-
-    <div id="ending" class="hidden">
-      <h2 id="endingTitle"></h2>
-      <img id="endingImage" class="character-image">
-      <p id="endingText"></p>
-      <button onclick="restartGame()">Main Lagi</button>
+  <div id="start-screen">
+    <div id="start-content">
+      <h1 id="game-title">Di buat dengan ❤️<br> oleh Rezky</h1>
+      <input type="text" id="name-input" placeholder="Masukkan nama kamu">
+      <button id="start-btn">Mulai Cerita</button>
     </div>
   </div>
 
-  <div id="notif"></div>
+  <div id="ending-screen">
+    <div id="ending-content">
+      <h2 id="ending-title"></h2>
+      <p id="ending-text"></p>
+      <button id="restart-btn">Mulai Lagi</button>
+    </div>
+  </div>
 
-<audio id="chapterAudio"></audio>
+  <script>
+    const commonChapters = [
+      {
+        bg: '1.jpg',
+        title: 'Pertemuan di Bawah Sakura',
+        character: { name: '???' },
+        text: (name) => `Kelopak sakura berjatuhan lembut saat seorang gadis berdiri di hadapanku, menghalangi cahaya matahari. Rambut hitamnya yang panjang berkibar pelan ditiup angin musim semi.`,
+        choices: [
+          { text: 'Angkat kepala dan tersenyum', effect: +2, response: '"Ma-Maaf mengganggu," bisiknya sambil memainkan ujung rok seragamnya, pipinya memerah.' },
+          { text: 'Berpura-pura tidak melihat', effect: -1, response: 'Dia tetap berdiri dengan sabar, sesekali menggeser berat badannya yang ringan.' },
+          { text: 'Bereskan buku dan bersiap pergi', effect: -3, response: '"A-aku pergi dulu," ucapnya lirih sambil menunduk dalam-dalam, suaranya hampir tak terdengar.' }
+        ]
+      },
+      {
+        bg: '2.jpg',
+        title: 'Sapaan Pertama',
+        character: { name: 'Gadis Misterius' },
+        text: (name) => `"Aku... sering melihatmu ke sini sendirian," ujarnya dengan suara lembut seperti gemerisik daun. Matanya yang berwarna madu menatapku dengan rasa ingin tahu yang tulus.`,
+        choices: [
+          { text: '"Aku suka ketenangan di sini" sambil tersenyum', effect: +3, response: '"Aku juga," jawabnya sambil tersipu, senyum kecil mengembang di bibirnya yang merah muda.' },
+          { text: '"Kamu mengikutiku?" dengan nada datar', effect: -2, response: 'Wajahnya langsung berubah pucat. "Tidak! Aku hanya... suka tempat ini juga," jawabnya cepat sambil menunduk.' },
+          { text: 'Diam sambil mengamatinya', effect: 0, response: 'Dia menggeser berat badannya, tangannya erat memegang buku yang dibawanya.' }
+        ]
+      }
+    ];
 
-<audio id="endingAudio"></audio>
-  <script src="script.js"></script>
+    const badRouteChapters = [
+  {
+    bg: 'Bad1.jpg',
+    title: 'Perkenalan Resmi',
+    character: { name: 'Hanaari' },
+    text: (name) => `"Namaku Hanaari 花愛莉," bisiknya sambil memegang erat buku di dadanya. "Kelas 2-B... Kalau kamu?"`,
+    choices: [
+      { text: `"Aku ${name}, senang bertemu"`, effect: +1, response: '"Hanaari saja sudah cukup," katanya sambil tersipu.' },
+      { text: '"Kenapa kamu tertarik padaku?"', effect: -2, response: '"Aku... hanya penasaran," bisiknya.' },
+      { text: '"Aku sibuk, lain kali saja"', effect: -3, response: 'Dia mengangguk pelan, matanya berkaca-kaca.' }
+    ]
+  },
+  {
+    bg: 'Bad1.jpg',
+    title: 'Bento yang Tertolak',
+    character: { name: 'Hanaari' },
+    text: (name) => `"Aku... membuat bento untuk kita," ucapnya sambil menawarkan kotak makan.`,
+    choices: [
+      { text: '"Terima kasih, tapi aku sudah bawa"', effect: -1, response: '"Oh... tidak apa-apa," katanya lemah.' },
+      { text: '"Aku tidak suka masakanmu"', effect: -4, response: 'Dia langsung menunduk.' },
+      { text: 'Menerima tapi tidak memakannya', effect: -2, response: 'Dia memperhatikannya dengan sedih.' }
+    ]
+  },
+  {
+    bg: 'Bad2.jpg',
+    title: 'Hujan Tiba-tiba',
+    character: { name: 'Hanaari' },
+    text: (name) => `Hujan turun. Hanaari mengeluarkan payung bermotif bunga.`,
+    choices: [
+      { text: 'Tolak dan pergi', effect: -4, response: 'Air matanya bercampur hujan.' },
+      { text: 'Ambil payung tanpa bicara', effect: -2, response: 'Dia membiarkan dirinya basah.' },
+      { text: '"Aku punya jas hujan"', effect: -1, response: '"Oh... baiklah," katanya.' }
+    ]
+  },
+  {
+    bg: 'Bad2.jpg',
+    title: 'Undangan ke Festival',
+    character: { name: 'Hanaari' },
+    text: (name) => `"Mau temani aku ke festival sekolah?" tanyanya penuh harap.`,
+    choices: [
+      { text: '"Aku janji dengan orang lain"', effect: -1, response: '"Tidak apa-apa," ucapnya.' },
+      { text: '"Tidak tertarik"', effect: -3, response: 'Dia menunduk dan pergi.' },
+      { text: '"Kita lihat nanti"', effect: -2, response: 'Dia tersenyum lemah.' }
+    ]
+  },
+  {
+    bg: 'Bad3.jpg',
+    title: 'Telepon Malam',
+    character: { name: 'Hanaari' },
+    text: (name) => `"Maaf... bisa dengar suaramu sebentar?"`,
+    choices: [
+      { text: '"Ini bukan jamnya!"', effect: -4, response: 'Telepon langsung ditutupnya.' },
+      { text: 'Tutup telepon', effect: -3, response: 'Dia tidak menelepon lagi.' },
+      { text: '"Aku sibuk"', effect: -1, response: '"Ya... lain kali," katanya.' }
+    ]
+  },
+  {
+    bg: 'Bad3.jpg',
+    title: 'Buku Harian',
+    character: { name: 'Hanaari' },
+    text: (name) => `"Aku ingin kau mengerti perasaanku."`,
+    choices: [
+      { text: 'Tolak mentah-mentah', effect: -5, response: 'Dia kabur dengan menangis.' },
+      { text: 'Baca sekilas', effect: -2, response: '"Setidaknya kau melihat," ucapnya.' },
+      { text: 'Terima tapi tidak membaca', effect: -3, response: 'Dia tampak kecewa.' }
+    ]
+  },
+  {
+    bg: 'Bad4.jpg',
+    title: 'Pengakuan Terakhir',
+    character: { name: 'Hanaari' },
+    text: (name) => `"Aku... sebenarnya menyukaimu."`,
+    choices: [
+      { text: '"Aku tidak peduli"', effect: -5, response: 'Dia pergi tanpa menoleh.' },
+      { text: '"Kita tidak cocok"', effect: -3, response: '"Aku tahu," katanya.' },
+      { text: 'Diam saja', effect: -2, response: 'Dia tersenyum sedih dan berbalik pergi.' }
+    ]
+  },
+  {
+    bg: 'Bad4.jpg',
+    title: 'Surat Terakhir',
+    character: { name: 'Hanaari 花愛莉' },
+    text: (name) => `"Aku akan pindah sekolah. Maaf telah mengganggumu."`,
+    choices: [
+      { text: 'Buang surat itu', effect: -3, response: 'Sobekannya tertiup angin.' },
+      { text: 'Baca lalu simpan', effect: -1, response: 'Kau menyimpannya di laci.' },
+      { text: 'Cari Hanaari tapi terlambat', effect: +1, response: 'Dia sudah pergi.' }
+    ]
+  },
+  {
+    bg: 'Bad4.jpg',
+    title: 'Kenangan',
+    character: { name: 'Hanaari 花愛莉' },
+    text: (name) => `Bertahun kemudian, kau melihat buku dengan nama "M. Hanaari".`,
+    choices: [
+      { text: 'Beli bukunya', effect: 0, response: 'Di akhir ada ilustrasi sakura.' },
+      { text: 'Biarkan saja', effect: -1, response: 'Namun kau tak bisa melupakannya.' },
+      { text: 'Cari informasi tentangnya', effect: +1, response: 'Dia kini ilustrator terkenal yang penyendiri.' }
+    ]
+  }
+];
+    const neutralRouteChapters = [
+  {
+    bg: 'neutral1.jpg',
+    title: 'Perkenalan',
+    character: { name: 'Hanaari' },
+    text: (name) => `Hanaari, siswi kelas 2-B yang pendiam, berdiri ragu di dekat taman. "Namaku Hanaari 花愛莉," bisiknya sambil memainkan ujung roknya. "Aku... suka menggambar di waktu luang."`,
+    choices: [
+      { text: '"Kenapa tertarik padaku?"', effect: 0, response: '"Kamu terlihat... menyenangkan," jawabnya malu-malu.' },
+            { text: `"Aku ${name}, suka membacamu"`, effect: +2, response: '"Eh? Kamu memperhatikanku?" wajahnya memerah.' },
+      { text: '"Aku harus pergi sekarang"', effect: -1, response: '"Oh... lain kali ya," senyumnya pudar.' }
+    ]
+  },
+  {
+    bg: 'neutral2.jpg',
+    title: 'Undangan Makan Siang',
+    character: { name: 'Hanaari' },
+    text: (name) => `kelas 2-B, Hanaari menghampirimu di lorong. "Aku bawa bento ekstra hari ini," ujarnya dengan suara kecil. "Kalau kamu mau... kita bisa makan bersama?"`,
+    choices: [
+      { text: '"Tentu, terima kasih!"', effect: +3, response: 'Dia tersenyum lebar sambil menyiapkan makanan.' },
+      { text: '"Aku tidak terlalu lapar"', effect: +1, response: '"Coba sedikit saja?" pintanya penuh harap.' },
+      { text: '"Mungkin lain kali"', effect: -1, response: '"Baiklah," jawabnya sambil menunduk.' }
+    ]
+  },
+  {
+    bg: 'neutral3.jpg',
+    title: 'Buku Sketsa',
+    character: { name: 'Hanaari' },
+    text: (name) => `Di sudut perpustakaan, Hanaari dari kelas 2-B memperlihatkan buku sketsanya. "Ini... gambarku," bisiknya sambil memperlihatkan sketsa dirimu sedang membaca. Tangannya gemetar sedikit.`,
+    choices: [
+      { text: '"Kamu sangat berbakat!"', effect: +3, response: '"Tidak juga..." wajahnya merah sambil tersipu.' },
+      { text: '"Boleh aku simpan yang ini?"', effect: +2, response: '"B-benarkah? Aku akan buatkan yang lebih bagus!"' },
+      { text: '"Kenapa gambarku?"', effect: 0, response: '"Kamu punya ekspresi yang bagus," jawabnya malu.' }
+    ]
+  },
+  {
+    bg: 'neutral4.jpg',
+    title: 'Hujan Tiba-tiba',
+    character: { name: 'Hanaari' },
+    text: (name) => `Hujan turun saat pulang sekolah. Hanaari dari kelas 2-B berdiri di depan gerbang. "Kita... bisa berbagi payung," ujarnya sambil mengeluarkan payung kecil.`,
+    choices: [
+      { text: 'Berbagi payung dengan sopan', effect: +1, response: 'Kalian berjalan dalam diam, sesekali bahu bersentuhan.' },
+            { text: 'Pegang payung untuknya', effect: +3, response: 'Dia tersipu saat kau memayunginya.' },
+      { text: '"Aku akan lari saja"', effect: -2, response: '"Hati-hati," bisiknya sambil melihatmu pergi.' }
+    ]
+  },
+  {
+    bg: 'yukata.jpg',
+    title: 'Festival Sekolah',
+    character: { name: 'Hanaari' },
+    text: (name) => `Di festival sekolah, Hanaari dari kelas 2-B memakai yukata biru. "Aku tidak punya teman untuk keliling..." suaranya kecil.`,
+    choices: [
+      { text: '"Ayo kita keliling bersama!"', effect: +3, response: 'Matanya berbinar seperti anak kecil.' },
+      { text: '"Kita bisa lihat stand makanan dulu"', effect: +2, response: '"Aku tahu yang enak-enak!" ujarnya bersemangat.' },
+      { text: '"Aku janji dengan teman"', effect: 0, response: '"Tidak apa," jawabnya sambil mencoba tersenyum.' }
+    ]
+  },
+  {
+    bg: 'neutral2.jpg',
+    title: 'Kelas Memasak',
+    character: { name: 'Hanaari' },
+    text: (name) => `"Ada kelas memasak ekstrakurikuler," bisik Hanaari dari kelas 2-B. "Aku tidak punya partner... mau ikut bersamaku?"`,
+    choices: [
+      { text: '"Tentu! Aku ingin belajar"', effect: +3, response: 'Dia langsung mengisi formulir dengan senyum lebar.' },
+      { text: '"Aku tidak bisa masak"', effect: +1, response: '"Aku bisa ajarkan," janjinya sambil tersenyum.' },
+      { text: '"Aku sibuk dengan klub lain"', effect: -1, response: '"Oh... tidak apa," jawabnya pelan.' }
+    ]
+  },
+  {
+    bg: 'neutral3.jpg',
+    title: 'Permen Lavender',
+    character: { name: 'Hanaari' },
+    text: (name) => `Hanaari dari kelas 2-B datang membawa kotak kecil. "Ini... permen lavender buatanku," katanya. "Bisa menenangkan pikiran."`,
+    choices: [
+      { text: 'Cicipi langsung', effect: +2, response: '"Kamu suka? Aku senang!" wajahnya berseri.' },
+      { text: 'Simpan sebagai kenang-kenangan', effect: +1, response: '"Kamu tidak mau mencobanya?" tanyanya penasaran.' },
+      { text: '"Aku tidak suka lavender"', effect: -1, response: '"Oh... maaf," bisiknya kecewa.' }
+    ]
+  },
+  {
+    bg: 'mtk.jpg',
+    title: 'Pekerjaan Rumah',
+    character: { name: 'Hanaari' },
+    text: (name) => `"Aku kesulitan dengan PR matematika," keluh Hanaari dari kelas 2-B di perpustakaan. "Bisa bantu aku?"`,
+    choices: [
+      { text: '"Ayo kita kerjakan bersama"', effect: +3, response: '"Terima kasih!" matanya berbinar.' },
+      { text: '"Aku juga belum selesai"', effect: +1, response: '"Kita bisa belajar bersama," sarannya.' },
+      { text: '"Aku sibuk hari ini"', effect: -1, response: '"Lain kali saja," jawabnya mencoba tersenyum.' }
+    ]
+  },
+  {
+    bg: 'neutral1.jpg',
+    title: 'Telepon Malam',
+    character: { name: 'Hanaari' },
+    text: (name) => `Pukul 11 malam, teleponmu berdering. Suara Hanaari dari kelas 2-B terdengar di ujung sana. "Maaf ganggu... aku tidak bisa tidur."`,
+    choices: [
+      { text: 'Temani bicara sebentar', effect: +2, response: '"Terima kasih sudah mendengarkan," bisiknya mengantuk.' },
+      { text: '"Sudah larut, tidurlah"', effect: 0, response: '"Maaf... selamat tidur," jawabnya pelan.' },
+      { text: 'Abaikan telepon', effect: -1, response: 'Dia tidak menelepon lagi malam itu.' }
+    ]
+  },
+  {
+    bg: 'neutral2.jpg',
+    title: 'Ujian Nasional',
+    character: { name: 'Hanaari' },
+    text: (name) => `Di kelas 2-B, Hanaari menggenggam buku erat-erat. "Aku sangat gugup untuk ujian besok," keluhnya.`,
+    choices: [
+      { text: '"Kamu pasti bisa!"', effect: +2, response: '"Kamu benar, aku harus percaya diri," katanya sambil tersenyum.' },
+      { text: 'Bantu belajar bersama', effect: +3, response: '"Aku lebih mengerti sekarang," ujarnya bersyukur.' },
+      { text: '"Aku juga gugup"', effect: +1, response: '"Setidaknya kita sama-sama gugup," candanya ringan.' }
+    ]
+  },
+  {
+    bg: 'neutral3.jpg',
+    title: 'Hadiah Ulang Tahun',
+    character: { name: 'Hanaari' },
+    text: (name) => `Di ruang kelas 2-B, Hanaari menghampirimu. "Ini... untuk ulang tahunmu," bisiknya memberi bingkai foto kalian berdua. Tangannya gemetar sedikit.`,
+    choices: [
+      { text: 'Terima dengan senang', effect: +3, response: 'Dia tersenyum lebar melihat reaksimu.' },
+      { text: '"Kamu ingat ulang tahunku?"', effect: +2, response: '"Aku ingat semua tentangmu," jawabnya malu-malu.' },
+      { text: 'Simpan tanpa melihat', effect: 0, response: 'Dia menunggu dengan harap apakah kau akan membukanya.' }
+    ]
+  },
+  {
+    bg: 'neutral4.jpg',
+    title: 'Kelulusan',
+    character: { name: 'Hanaari' },
+    text: (name) => `Di hari kelulusan, Hanaari dari kelas 2-B berdiri dengan album kenangan. "Aku akan kuliah di sekolah masak," katanya. "Ini untukmu."`,
+    choices: [
+      { text: 'Peluk dia erat', effect: +4, response: 'Dia terkejut lalu meleleh dalam pelukanmu.' },
+      { text: '"Kamu akan jadi koki hebat"', effect: +2, response: '"Kamu benar-benar percaya padaku?" matanya berbinar.' },
+      { text: '"Semoga sukses"', effect: +1, response: 'Dia mengangguk dengan senyum kecil.' }
+    ]
+  },
+  {
+    bg: 'neutral1.jpg',
+    title: 'Sahabat Selamanya',
+    character: { name: 'Hanaari' },
+    text: (name) => `Di bawah pohon sakura, Hanaari dari kelas 2-B menatapmu lembut. "Terima kasih sudah menjadi sahabatku," bisiknya.`,
+    choices: [
+      { text: '"Kita akan tetap berteman"', effect: +3, response: 'Dia tersenyum bahagia mendengarnya.' },
+      { text: 'Berikan hadiah perpisahan', effect: +2, response: '"Kamu ingat ini favoritku?" matanya berkaca-kaca.' },
+      { text: 'Diam sambil menikmati momen', effect: +1, response: 'Dia tersenyum mengerti, menikmati keheningan bersamamu.' }
+    ]
+  }
+];
+    const goodRouteChapters = [
+  {
+    bg: 'good1.jpg', // Chapter 1
+    title: 'Perkenalan',
+    character: { name: 'Hanaari' },
+    text: (name) => `"Namaku Hanaari 花愛莉," ucapnya tersipu. "Aku dari kelas 2-B. Duduk di dekat jendela..."`,
+    choices: [
+      { text: '"Kamu cantik hari ini"', effect: +2, response: '"A-aku... terima kasih," bisiknya pelan.' },
+            { text: `"Aku ${name}, suka caramu tersenyum"`, effect: +3, response: 'Wajahnya langsung memerah. "J-jangan bicara begitu..."' },
+      { text: '"Aku ingin tahu lebih banyak tentangmu"', effect: +4, response: '"B-benarkah?" matanya berbinar.' }
+    ]
+  },
+  {
+    bg: 'good2.jpg', // Chapter 2
+    title: 'Bento Spesial',
+    character: { name: 'Hanaari' },
+    text: (name) => `"Aku bangun pagi buat ini," ujarnya malu. "Untuk kamu... dari kelas 2-B."`,
+    choices: [
+      { text: 'Cicipi langsung dengan antusias', effect: +3, response: '"Rasanya enak?" tanyanya gugup.' },
+            { text: '"Ini luar biasa! Foto dulu!"', effect: +4, response: 'Dia tersipu malu melihat kamu memotret.' },
+      { text: '"Boleh aku traktir besok?"', effect: +2, response: '"Tidak perlu... tapi aku senang," jawabnya.' }
+    ]
+  },
+  {
+    bg: 'good3.jpg', // Chapter 3
+    title: 'Buku Sketsa Rahasia',
+    character: { name: 'Hanaari' },
+    text: (name) => `"Aku... sering menggambarmu diam-diam di kelas 2-B." katanya sembari menyerahkan buku sketsa.`,
+    choices: [
+      { text: '"Boleh aku simpan yang ini?"', effect: +5, response: '"Aku akan buat album khusus!" ucapnya semangat.' },
+      { text: '"Gambarku lagi lain kali ya"', effect: +4, response: '"Setiap hari kalau perlu!" jawabnya tertawa kecil.' },
+      { text: 'Buat sketsa dirinya sebagai balasan', effect: +6, response: '"Pertama kalinya ada yang menggambarku," bisiknya.' }
+    ]
+  },
+  {
+    bg: 'good4.jpg', // Chapter 4
+    title: 'Hujan Berdua',
+    character: { name: 'Hanaari' },
+    text: (name) => `"Mau bareng?" tawarnya sambil membuka payung kecil. "Seperti waktu kita pulang dari kelas 2-B minggu lalu."`,
+    choices: [
+      { text: 'Pegang bahunya erat', effect: +6, response: 'Dia tersenyum sambil sedikit merapat padamu.' },
+      { text: 'Tawarkan jaket karena dia kedinginan', effect: +5, response: '"Terima kasih... hangat banget," ucapnya pelan.' },
+      { text: '"Kamu cantik di bawah hujan"', effect: +4, response: '"D-diam ah..." wajahnya merah padam.' }
+    ]
+  },
+  {
+    bg: 'good1.jpg', // Chapter 5
+    title: 'Telepon Tengah Malam',
+    character: { name: 'Hanaari' },
+    text: (name) => `"Maaf... aku nggak bisa tidur," ucapnya di telepon. "Boleh denger suaramu, teman sekelas 2-B ku?"`,
+    choices: [
+      { text: 'Temani bicara sampai dia tertidur', effect: +5, response: '"Terima kasih..." ucapnya sebelum napasnya teratur.' },
+      { text: 'Nyanyikan lagu pengantar tidur', effect: +6, response: '"Suaramu... indah," bisiknya mengantuk.' },
+      { text: 'Tawarkan video call', effect: +4, response: 'Wajah ngantuknya bikin kamu ikut tersenyum.' }
+    ]
+  },
+  {
+    bg: 'good2.jpg', // Chapter 6
+    title: 'Ketakutan yang Terungkap',
+    character: { name: 'Hanaari' },
+    text: (name) => `"Aku takut... perasaanku bikin aku lemah," katanya gemetar. "Apalagi kamu satu kelas 2-B denganku..."`,
+    choices: [
+      { text: 'Peluk erat tanpa kata', effect: +7, response: '"Jangan pergi..." bisiknya sambil mencengkeram bajumu.' },
+      { text: '"Aku di sini untukmu"', effect: +6, response: 'Dia menangis di bahumu, melepaskan segalanya.' },
+      { text: '"Aku juga mencintaimu"', effect: +10, response: 'Dia memelukmu erat dengan air mata bahagia.' }
+    ]
+  },
+  {
+    bg: 'yukata.jpg', // Chapter 7
+    title: 'Festival Cinta',
+    character: { name: 'Hanaari' },
+    text: (name) => `"Aku... nggak ada teman buat keliling," ucapnya dengan yukata biru, mengingatkanmu pada kelas 2-B.`,
+    choices: [
+      { text: '"Kamu cantik sekali hari ini"', effect: +6, response: 'Dia terdiam, pipinya merah sampai ke telinga.' },
+      { text: 'Genggam tangannya erat', effect: +5, response: 'Dia menggenggam balik dengan senyum malu.' },
+      { text: 'Sematkan bunga di rambutnya', effect: +7, response: '"Terima kasih... aku suka banget," bisiknya.' }
+    ]
+  },
+  {
+    bg: 'good5.jpg', // Chapter 8
+    title: 'Kelas Memasak Berdua',
+    character: { name: 'Hanaari' },
+    text: (name) => `"Ada kelas memasak khusus pasangan," ucapnya. "Mau jadi partnerku... teman 2-B ku?"`,
+    choices: [
+      { text: '"Tentu! Aku ingin belajar"', effect: +6, response: '"Serius? Aku senang banget!" katanya semangat.' },
+      { text: '"Aku akan buatkan sesuatu spesial"', effect: +7, response: '"Aku nggak sabar makannya!"' },
+      { text: 'Peluk dari belakang', effect: +8, response: 'Dia kaget lalu tersenyum lembut dalam pelukanmu.' }
+    ]
+  },
+  {
+    bg: 'good1.jpg', // Chapter 9
+    title: 'Permen Lavender Spesial',
+    character: { name: 'Hanaari' },
+    text: (name) => `"Ini... versi spesial buat kamu," ucapnya memberi kotak kecil. "Karena kamu satu-satunya yang ngerti aku di kelas 2-B."`,
+    choices: [
+      { text: 'Simpan satu di dompet sebagai jimat', effect: +6, response: '"Kamu beneran nyimpen?" matanya bersinar.' },
+            { text: 'Cicipi dan peluk dia erat', effect: +7, response: '"Kamu suka? Aku senang!"' },
+      { text: 'Beri ciuman di pipi sebagai balasan', effect: +9, response: 'Dia terkejut, lalu tertawa malu-malu.' }
+    ]
+  },
+  {
+    bg: 'good2.jpg', // Chapter 10
+    title: 'Kencan Pertama',
+    character: { name: 'Hanaari' },
+    text: (name) => `"Aku buat reservasi di kafe kecil," katanya. "Untuk kencan kita... teman 2-B pertama yang bikin jantungku deg-degan."`,
+    choices: [
+            { text: '"Aku tidak sabar!"', effect: +6, response: 'Dia tersenyum lebar melihat semangatmu.' },
+                  { text: 'Bawa bunga favoritnya', effect: +7, response: '"Kamu ingat lavender kesukaanku..." bisiknya.' },
+      { text: 'Peluk dan bisikkan "Aku mencintaimu"', effect: +8, response: 'Dia menangis bahagia di bahumu.' }
+    ]
+  },
+  {
+    bg: 'good3.jpg', // Chapter 11
+    title: 'Pengakuan di Bawah Sakura',
+    character: { name: 'Hanaari' },
+    text: (name) => `"Aku... ada yang ingin aku bilang," katanya di tempat pertama kalian duduk sepulang kelas 2-B.`,
+    choices: [
+      { text: 'Genggam tangannya erat', effect: +8, response: 'Dia menarik napas dalam dan mulai bicara.' },
+      { text: 'Bisikkan "Aku tahu" sambil tersenyum', effect: +9, response: 'Dia kaget, lalu tersenyum bahagia.' },
+      { text: 'Berikan cincin pertunangan', effect: +12, response: 'Dia menangis sambil mengangguk kuat.' }
+    ]
+  },
+  {
+    bg: 'good5.jpg', // Chapter 12
+    title: 'Malam Pertama',
+    character: { name: 'Hanaari' },
+    text: (name) => `"Aku... gugup malam ini," katanya memegang erat bajunya. "Tapi aku percaya kamu, teman 2-B ku..."`,
+    choices: [
+      { text: 'Peluk dan tenangkan dia', effect: +7, response: '"Aku merasa aman bersamamu," ucapnya lembut.' },
+      { text: 'Bisikkan kata-kata manis', effect: +8, response: 'Dia tersenyum malu dan memelukmu erat.' },
+      { text: 'Tuntun dia pelan-pelan', effect: +9, response: '"Terima kasih sudah sabar," katanya.' }
+    ]
+  },
+  {
+    bg: 'good1.jpg', // Chapter 13
+    title: 'Masa Depan Bersama',
+    character: { name: 'Hanaari' },
+    text: (name) => `"Aku ingin buka kafe kecil bersamamu," katanya. "Mulai dari obrolan kecil kita di kelas 2-B, sekarang jadi impian..."`,
+    choices: [
+      { text: '"Aku akan dukung mimpimu"', effect: +8, response: 'Dia tersenyum bahagia dan memelukmu erat.' },
+      { text: 'Berikan denah kafe yang sudah kau gambar', effect: +9, response: '"Kamu sudah mikirin ini?" matanya berkaca-kaca.' },
+      { text: 'Peluk dan bisikkan "Aku mencintaimu"', effect: +10, response: '"Aku juga mencintaimu," balasnya penuh haru.' }
+    ]
+  }
+];
+
+    const endings = [
+      {
+        title: "Jalan Berpisah",
+        bg: "bad-ending.jpg",
+        text: (name) => `Hubunganmu dengan Hanaari berakhir. Kamu sesekali melihatnya di koridor, tapi dia tak pernah menyapa lagi. Hanaari tetap menjadi gadis misterius yang pernah singgah dalam hidupmu.`,
+        minScore: -999,
+        maxScore: -3
+      },
+      {
+        title: "Sahabat",
+        bg: "neutral-ending.jpg",
+        text: (name) => `Kamu dan Hanaari menjadi sahabat dekat. Setiap musim semi, kalian selalu menghabiskan waktu bersama di taman, mengingat pertemuan pertama kalian.`,
+        minScore: 5,
+        maxScore: 15
+      },
+      {
+        title: "Cinta di Sakura",
+        bg: "good-ending.jpg",
+        text: (name) => `Di bawah pohon sakura tempat pertama bertemu, Hanaari mengungkapkan perasaannya. "Aku menyukaimu sejak hari itu." Musim semi berikutnya, kalian menjalin hubungan indah.`,
+        minScore: 16,
+        maxScore: 999
+      }
+    ];
+
+    let currentChapter = 0;
+    let score = 0;
+    let playerName = '';
+    let isChoosing = false;
+    let currentRoute = []; // Will hold the current route chapters
+
+    const startScreen = document.getElementById('start-screen');
+    const gameContainer = document.getElementById('game-container');
+    const endingScreen = document.getElementById('ending-screen');
+    const nameInput = document.getElementById('name-input');
+    const startBtn = document.getElementById('start-btn');
+    const chapterTitle = document.getElementById('chapter-title');
+    const characterName = document.getElementById('character-name');
+    const dialogueText = document.getElementById('dialogue-text');
+    const choicesArea = document.getElementById('choices-area');
+    const endingTitle = document.getElementById('ending-title');
+    const endingText = document.getElementById('ending-text');
+    const restartBtn = document.getElementById('restart-btn');
+    const notification = document.getElementById('notification');
+    const musicToggle = document.getElementById('music-toggle');
+
+const clickSound = new Audio();
+clickSound.src = 'click.mp3';
+clickSound.volume = 0.3;
+
+const bgMusic = new Audio();
+bgMusic.src = 'Musikgame.mp3';
+bgMusic.volume = 0.5;
+bgMusic.loop = true;
+
+let isMusicPlaying = false;
+let audioContextResumed = false;
+
+// Event listeners
+startBtn.addEventListener('click', startGame);
+restartBtn.addEventListener('click', restartGame);
+musicToggle.addEventListener('click', toggleMusic);
+
+// Solusi untuk autoplay policy
+document.addEventListener('click', function() {
+    if (!audioContextResumed) {
+        // Coba memulai musik setelah interaksi pertama
+        startBackgroundMusic();
+        audioContextResumed = true;
+    }
+}, { once: true }); // Hanya sekali saat pertama klik
+
+// Fungsi untuk memulai musik
+function startBackgroundMusic() {
+    if (!isMusicPlaying) {
+        const playPromise = bgMusic.play();
+        
+        playPromise.then(() => {
+            isMusicPlaying = true;
+            musicToggle.textContent = '🔈';
+        }).catch(error => {
+            console.log("Autoplay prevented:", error);
+            musicToggle.textContent = '🔇';
+            musicToggle.style.display = 'block';
+        });
+    }
+}
+
+// Fungsi toggle musik
+function toggleMusic() {
+    if (isMusicPlaying) {
+        bgMusic.pause();
+        musicToggle.textContent = '🔇';
+    } else {
+        bgMusic.play()
+            .then(() => {
+                musicToggle.textContent = '🔈';
+            })
+            .catch(e => {
+                console.log("Play failed:", e);
+            });
+    }
+    isMusicPlaying = !isMusicPlaying;
+}
+
+    function playClickSound() {
+      clickSound.currentTime = 0;
+      clickSound.play().catch(e => console.log("Audio play failed:", e));
+    }
+
+    function startGame() {
+    playClickSound();
+    const name = nameInput.value.trim();
+    if (!name) {
+        showNotification("Masukkan nama dulu");
+        return;
+    }
+    
+    playerName = name;
+    startScreen.style.display = 'none';
+    gameContainer.style.display = 'flex';
+    
+    // Pastikan musik tetap berjalan
+    if (!isMusicPlaying) {
+        startBackgroundMusic();
+    }
+    
+    loadChapter();
+}
+
+    function loadChapter() {
+      // Check if we need to transition to a specific route
+      if (currentChapter === commonChapters.length) {
+        // Determine route based on current score
+        if (score <= 0) {
+          // Bad ending route
+          currentRoute = [...badRouteChapters];
+        } else if (score <= 5) {
+          // Neutral ending route
+          currentRoute = [...neutralRouteChapters];
+        } else {
+          // Good/God ending route
+          currentRoute = [...goodRouteChapters];
+        }
+      }
+      
+      if (currentChapter >= currentRoute.length + commonChapters.length) {
+        showEnding();
+        return;
+      }
+
+      // Get the current chapter data
+      const chapter = currentChapter < commonChapters.length 
+        ? commonChapters[currentChapter] 
+        : currentRoute[currentChapter - commonChapters.length];
+      
+      document.body.style.backgroundImage = `url('${chapter.bg}')`;
+      chapterTitle.textContent = chapter.title;
+      characterName.textContent = chapter.character.name;
+      dialogueText.textContent = chapter.text(playerName);
+      
+      choicesArea.innerHTML = '';
+      chapter.choices.forEach((choice, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.textContent = choice.text;
+        btn.addEventListener('click', () => {
+          if (!isChoosing) {
+            playClickSound();
+            makeChoice(choice);
+          }
+        });
+        
+        btn.style.animationDelay = `${index * 0.1}s`;
+        choicesArea.appendChild(btn);
+      });
+      
+      isChoosing = false;
+    }
+
+    function makeChoice(choice) {
+      isChoosing = true;
+      
+      const buttons = document.querySelectorAll('.choice-btn');
+      buttons.forEach(btn => {
+        btn.classList.add('btn-disabled');
+      });
+      
+      score += choice.effect;
+      showNotification(choice.response);
+      
+      currentChapter++;
+      setTimeout(() => {
+        loadChapter();
+      }, 1000);
+    }
+
+    function showNotification(message) {
+      notification.textContent = message;
+      notification.style.display = 'block';
+      
+      setTimeout(() => {
+        notification.style.display = 'none';
+      }, 1500);
+    }
+
+    function showEnding() {
+      gameContainer.style.display = 'none';
+      endingScreen.style.display = 'flex';
+      
+      const ending = endings.find(e => score >= e.minScore && score <= e.maxScore);
+      
+      endingScreen.style.backgroundImage = `url('${ending.bg}')`;
+      endingTitle.textContent = ending.title;
+      endingText.textContent = ending.text(playerName);
+    }
+
+    function restartGame() {
+      playClickSound();
+      currentChapter = 0;
+      score = 0;
+      currentRoute = [];
+      
+      endingScreen.style.display = 'none';
+      startScreen.style.display = 'flex';
+      nameInput.value = '';
+      nameInput.focus();
+      startBackgroundMusic();
+    }
+
+    gameContainer.style.display = 'none';
+    endingScreen.style.display = 'none';
+    nameInput.focus();
+    
+    // Fungsi untuk menghentikan musik
+function stopAllAudio() {
+    bgMusic.pause();
+    bgMusic.currentTime = 0;
+    clickSound.pause();
+    clickSound.currentTime = 0;
+}
+
+// Event saat tab/ACode tidak aktif
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        stopAllAudio();
+    }
+});
+
+// Event saat keluar dari tab (untuk browser)
+window.addEventListener('pagehide', stopAllAudio);
+
+// Cadangan jika event di atas tidak terdeteksi
+window.addEventListener('beforeunload', stopAllAudio);
+  </script>
 </body>
 </html>
